@@ -1,0 +1,64 @@
+{
+  "name": "middleware-monorepo",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/middleware-monorepo/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/middleware-monorepo",
+        "main": "apps/middleware-monorepo/src/main.ts",
+        "tsConfig": "apps/middleware-monorepo/tsconfig.app.json",
+        "assets": ["apps/middleware-monorepo/src/assets"],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/middleware-monorepo/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "middleware-monorepo:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "middleware-monorepo:build:development"
+        },
+        "production": {
+          "buildTarget": "middleware-monorepo:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/middleware-monorepo/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/middleware-monorepo/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    }
+  },
+  "tags": []
+}
